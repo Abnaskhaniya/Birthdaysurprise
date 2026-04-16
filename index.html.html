@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love</title>
+    <script src="https://tailwindcss.com"></script>
+    <script src="https://cloudflare.com"></script>
+    <script src="https://jsdelivr.net"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff3366;
+            --bg: #050505;
+        }
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .serif { font-family: 'Playfair Display', serif; }
+        
+        /* 2025 Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        /* Animated Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #fff, #ff3366, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .hidden-section { display: none; opacity: 0; }
+        
+        /* Floating particles background */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- STEP 1: THE UNWRAP -->
+    <section id="step1" class="h-screen flex flex-col items-center justify-center p-6">
+        <div class="glass p-12 rounded-[2rem] text-center max-w-md w-full cursor-pointer hover:scale-105 transition-transform duration-500" onclick="startJourney()">
+            <div id="gift-icon" class="text-8xl mb-6 animate-bounce">🎁</div>
+            <h2 class="text-sm uppercase tracking-[0.4em] text-gray-400 mb-2">A message for you</h2>
+            <h1 class="text-3xl font-bold mb-4">Are you ready?</h1>
+            <p class="text-gray-500 text-sm">Tap the gift to begin your surprise.</p>
+        </div>
+    </section>
+
+    <!-- STEP 2: THE REVEAL & TIMELINE -->
+    <section id="step2" class="hidden-section min-h-screen py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-6xl md:text-8xl font-black serif gradient-text mb-12 text-center italic">Happy Birthday, Beautiful.</h1>
+            
+            <!-- Personal Timeline -->
+            <div class="space-y-24">
+                <div class="glass p-8 rounded-3xl reveal-item">
+                    <span class="text-pink-500 font-bold tracking-tighter text-4xl">01.</span>
+                    <h3 class="text-2xl font-bold mt-2">The Moment We Met</h3>
+                    <p class="text-gray-400 mt-4 leading-relaxed">Insert your personal story here. The day the world changed for me because you stepped into it.</p>
+                </div>
+
+                <div class="glass p-8 rounded-3xl reveal-item text-right">
+                    <span class="text-pink-500 font-bold tracking-tighter text-4xl">02.</span>
+                    <h3 class="text-2xl font-bold mt-2">Our Favorite Memory</h3>
+                    <p class="text-gray-400 mt-4 leading-relaxed">That night under the stars when we couldn't stop laughing. I knew then you were the one.</p>
+                </div>
+
+                <div class="glass p-8 rounded-3xl reveal-item">
+                    <span class="text-pink-500 font-bold tracking-tighter text-4xl">03.</span>
+                    <h3 class="text-2xl font-bold mt-2">The Future</h3>
+                    <p class="text-gray-400 mt-4 leading-relaxed">I can't wait for all the birthdays we have left to celebrate together. This is just the beginning.</p>
+                </div>
+            </div>
+
+            <!-- Final Action -->
+            <div class="mt-32 text-center">
+                <button onclick="finalSurprise()" class="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-pink-500 hover:text-white transition-all duration-300 transform hover:scale-110">
+                    See My Last Message ❤️
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- STEP 3: FINAL LOVE LETTER -->
+    <section id="step3" class="hidden-section h-screen flex items-center justify-center p-6 text-center">
+        <div class="max-w-2xl">
+            <h2 class="serif italic text-4xl md:text-6xl mb-8">"You are my favorite chapter in every story."</h2>
+            <p class="text-gray-400 text-lg leading-loose mb-8">
+                I wanted to build something as unique and beautiful as you are. Thank you for being my light, my partner, and my best friend. Today is all about you.
+            </p>
+            <div class="text-pink-500 font-bold text-xl uppercase tracking-widest">— Forever Yours</div>
+        </div>
+    </section>
+
+    <script>
+        // BACKGROUND PARTICLES
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 51, 102, 0.3)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        createParticles();
+        animate();
+
+        // JOURNEY NAVIGATION
+        function startJourney() {
+            // Confetti Blast
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff3366', '#ffffff', '#ff85a2']
+            });
+
+            gsap.to("#step1", { opacity: 0, duration: 0.8, onComplete: () => {
+                document.getElementById('step1').style.display = 'none';
+                const step2 = document.getElementById('step2');
+                step2.style.display = 'block';
+                gsap.to(step2, { opacity: 1, duration: 1 });
+                
+                // Animate timeline items as they appear
+                gsap.from(".reveal-item", {
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.3,
+                    ease: "power4.out"
+                });
+            }});
+        }
+
+        function finalSurprise() {
+            gsap.to("#step2", { opacity: 0, duration: 0.8, onComplete: () => {
+                document.getElementById('step2').style.display = 'none';
+                const step3 = document.getElementById('step3');
+                step3.style.display = 'flex';
+                gsap.to(step3, { opacity: 1, duration: 1.5 });
+                
+                // Continuous slow confetti
+                var end = Date.now() + (5 * 1000);
+                (function frame() {
+                    confetti({ particleCount: 2, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff3366'] });
+                    confetti({ particleCount: 2, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ffffff'] });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            }});
+        }
+    </script>
+</body>
+</html>
+
